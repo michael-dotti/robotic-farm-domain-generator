@@ -1,0 +1,71 @@
+gemini:
+  gemini-3.1-pro-preview:
+    model_family: gemini
+    model_alias: gemini-3.1-pro-preview
+    model_context_length: 2000000
+    model_params:
+      temperature: 0.0
+
+  gemini-2.5-flash:
+    model_family: gemini
+    model_alias: gemini-2.5-flash
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+  gemini-3.8-flash:
+    model_family: gemini
+    model_alias: gemini-3.8-flash
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+  gemini-3.7-flash:
+    model_family: gemini
+    model_alias: gemini-3.7-flash
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+  gemini-3.6-flash:
+    model_family: gemini
+    model_alias: gemini-3.6-flash
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+  gemini-3.5-flash:
+    model_family: gemini
+    model_alias: gemini-3.5-flash
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+  gemini-3.5-flash-lite:
+    model_family: gemini
+    model_alias: gemini-3.5-flash-lite
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+  gemini-3.1-flash-lite:
+    model_family: gemini
+    model_alias: gemini-3.1-flash-lite
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+ollama:
+  qwen2.5-coder:14b:
+    model_family: qwen
+    model_alias: qwen2.5-coder:14b
+    model_context_length: 32768
+    model_params:
+      temperature: 0.0
+
+  qwen2.5-coder:7b:
+    model_family: qwen
+    model_alias: qwen2.5-coder:7b
+    model_context_length: 32768
+    model_params:
+      temperature: 0.0
