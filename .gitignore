@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# file personali
+personal-robotic-farm-domain-generator.py
+
 # C extensions
 *.so
 
