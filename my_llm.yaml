@@ -69,3 +69,18 @@ ollama:
     model_context_length: 32768
     model_params:
       temperature: 0.0
+
+huggingface:
+  Qwen/Qwen2.5-Coder-3B-Instruct:
+    model_family: qwen
+    model_alias: Qwen/Qwen2.5-Coder-3B-Instruct
+    model_context_length: 32768
+    model_params:
+      temperature: 0.0
+
+  google/gemma-2-2b-it:
+    model_family: gemma
+    model_alias: google/gemma-2-2b-it
+    model_context_length: 8192
+    model_params:
+      temperature: 0.0
