@@ -23,7 +23,7 @@ All'avvio, la script presenta un menu interattivo che permette di scegliere tra 
 ## 🛠️ Requisiti e Configurazione
 
 ### 1. Prerequisiti
-* **Python 3.10+**
+* **Python 3.12+**
 * **Ollama** installato e attivo (necessario solo se desideri usare Qwen)
 * **API Key di Google AI Studio** (necessario solo se desideri usare Gemini)
 
