@@ -9,8 +9,8 @@ from l2p.utils.pddl_format import format_types, format_predicates, format_action
 from l2p.utils.pddl_prompt import load_custom_template, load_default_template # per caricare i template custom o quelli di default di l2p (legati a PromptBuilder)
 
 # Librerie di sistema e utilità
-import sys # per far terminare prima il programam in caso di errori
-import time # calcola tempo di esecuzioen del programma
+import sys # per far terminare prima il programma in caso di errori
+import time # calcola tempo di esecuzione del programma
 import questionary # genera un menu a scelta
 from dotenv import load_dotenv # per caricare le variabili d'ambiente
 
@@ -391,7 +391,7 @@ while not domain_result.valid and current_attempt <= MAX_ATTEMPTS:
 # 4. RISULTATO FINALE
 # =======================================================
 if domain_result.valid:
-    print(f"\n[OK] Domain PDDL valido e pronto! Generato in {current_attempt} iterazioni.")
+    print(f"\n[OK] Domain PDDL valido e pronto! Generato in {current_attempt} iterazione/i.")
     print("--- ANTEPRIMA DEL FILE DOMAIN.PDDL ---\n")
     print(domain_pddl_content)
 else:
