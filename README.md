@@ -27,7 +27,7 @@ Script  progettato specificamente per l'esecuzione su cluster HPC. Non richiede 
 * **Python 3.12+**
 * **Ollama** installato e attivo (necessario solo se desideri usare Qwen)
 * **API Key di Google AI Studio** (necessario solo se desideri usare Gemini)
-* * **Access Token di Hugging Face** (necessario **solo** se usi `main_server.py` con modelli "gated" come Gemma)
+* **Access Token di Hugging Face** (necessario **solo** se usi `main_server.py` con modelli "gated" come Gemma)
 
 Se intendi usare Qwen2.5 Coder, scarica prima il modello locale con:
 ```bash
@@ -39,6 +39,18 @@ Clona la repository e installa i pacchetti necessari tramite il file requirement
 ```bash
 git clone https://github.com/tuo-utente/robotic-farm-domain-generator.git
 cd robotic-farm-domain-generator
+
+# Creazione dell'ambiente virtuale
+python3 -m venv .venv
+
+# Attivazione dell'ambiente virtuale
+# in Linux
+source .venv/bin/activate
+# in Windows
+.venv\Scripts\activate.bat
+
+# Aggiornamento pip e installazione delle dipendenze
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
@@ -48,7 +60,19 @@ Copia il file di esempio .env.example per creare il tuo file di configurazione d
 cp .env.example .env
 ```
 
-Apri il file .env e inserisci la tua chiave API se usi Gemini:
+Apri il file .env e inserisci la tua chiave API o il token se usi Gemini o Hugging Face:
 ```env
 LLM_GEMINI_KEY="la_tua_chiave_api_qui"
+HF_TOKEN="il_tuo_token_huggingface_qui"
 ```
+
+## 💻 Guida all'Uso
+
+### Esecuzione Locale
+Assicurati che l'ambiente virtuale sia attivo ed esegui:
+```bash
+python main.py
+```
+
+Per l'esecuzione in un cluster i comandi possono cambiare in base alle istruzioni definite dal proprietario del cluster.
+
