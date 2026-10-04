@@ -20,37 +20,45 @@ load_dotenv()
 # Costanti dell'applicazione
 DOMAIN_NAME = "CAMPI"
 QWEN_NAME = "qwen2.5-coder:7b"
+CODE_LAMA = "codellama:latest"
+CODE_GEMMA = "codegemma:latest"
+MISTRAL_ORCA = "mistral-openorca:7b"
+ORNITH = "ornith-1.5:9b"
+COGITO = "cogito:8b"
 GEMINI_NAME = "gemini-3.1-pro-preview"
 MAX_ATTEMPTS = 5
 
 def termina_programma(message):
     sys.exit(message)
 
+# dizionario per la manutenibilità del codice
+PROVIDERS = {
+    QWEN_NAME: "ollama",
+    CODE_LAMA: "ollama",
+    CODE_GEMMA: "ollama",
+    MISTRAL_ORCA: "ollama",
+    ORNITH: "ollama",
+    COGITO: "ollama",
+    GEMINI_NAME: "gemini"
+}
 
 # Menu interattivo sul terminale per la selezione del modello LLM
 response = questionary.select(
     "Quale intelligenza artificiale vuoi utilizzare?",
-    choices=[QWEN_NAME,GEMINI_NAME],
+    choices=[QWEN_NAME, GEMINI_NAME, CODE_LAMA, CODE_GEMMA, MISTRAL_ORCA, ORNITH, COGITO],
     instruction="", # Rimuove l'indicazione "(Use arrow keys)"
 ).ask()
 
 
-# Inizializzazione del provider LLM selezionato dall'utente
-if response == QWEN_NAME:
-    llm = UnifiedLLM(
-        provider="ollama",
-        model=QWEN_NAME,
-        config_path="my_llm.yaml"
-    )
-elif response == GEMINI_NAME:
-    llm = UnifiedLLM(
-        provider="gemini",
-        model=GEMINI_NAME,
-        config_path="my_llm.yaml"
-    )
-else:
+# Inizializzazione del provider LLM selezionato dall'utente (qui utilizzo il dizionario)
+if response not in PROVIDERS:
     raise ValueError(f"Hai selezionato un LLM non supportato: {response}")
 
+llm = UnifiedLLM(
+    provider=PROVIDERS[response],
+    model=response,
+    config_path="my_llm.yaml"
+)
 
 print("\nSalvataggio template di default")
 # Costruzione del prompt basato sul template l2p + regole personalizzate per gli errori specifici riscontrati

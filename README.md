@@ -9,27 +9,37 @@ Questo progetto è una pipeline automatizzata sviluppata con la libreria **`l2p`
 
 ## 🚀 Modalità di Esecuzione e Modelli LLM
 
-Il progetto offre due script di avvio distinti, pensati per ambienti di esecuzione differenti.
+Il progetto offre due script di avvio distinti, pensati per ambienti di esecuzione differenti. L'elenco esatto dei modelli supportati è in continua evoluzione.
 
 ### 1. Esecuzione Locale (`main.py`)
-Script pensato per l'uso su PC. Presenta un menu interattivo nel terminale per la scelta del modello.
-* **`qwen2.5-coder:7b`** (Provider: Ollama locale) - Modello open source ottimizzato per il codice.
+Script pensato per l'uso su PC. Presenta un menu interattivo nel terminale per la scelta del modello. Possiamo suddividere i modelli a disposizione in due tipologie:
+1) LLM caricati in locale: utilizziamo Ollama per per eseguire localmente modelli (esempi: *CodeLlama*, *CodeGemma*, *Mistral*, *Cogito*, *Ornith*, ecc.).
+2) LLM in cloud: usufruiamo dei servizi IA offerti da Google Gemini API, che tramite un account ti permette di generare una chiave
+per eseguire un loro LLM. In questo modo al tuo pc non verranno richieste risorse per eseguire LLM. Attenzione: un account gratuito
+ti concede un utilizzo limitato degli LLM (es: 20 richieste massime al giorno).
+Per ora è disponibile un solo LLM di Google:
 * **`gemini-3.1-pro-preview`** (Provider: Google Gemini API) - Modello cloud ad alte prestazioni.
 
 ### 2. Esecuzione Batch per Server/Cluster (`main_server.py`)
-Script  progettato specificamente per l'esecuzione su cluster HPC. Non richiede Ollama: scarica e avvia i modelli direttamente in VRAM tramite l'integrazione nativa Hugging Face.
-* **`Qwen/Qwen2.5-Coder-3B-Instruct`** (Provider: Hugging Face) - Versione leggera da 3 miliardi di parametri, ideale per VRAM limitate.
-* **`google/gemma-2-2b-it`** (Provider: Hugging Face) - Modello Google ultra-leggero da 2 miliardi di parametri.
-
+Script progettato specificamente per l'esecuzione su cluster HPC con risorse maggiori, mirato a testare modelli da 30B a 70B di parametri.Non richiede Ollama: scarica e avvia i modelli direttamente tramite l'integrazione nativa Hugging Face.
+* **Selezione Modello:** I modelli vengono gestiti dinamicamente tramite argomento a riga di comando. 
+* Puoi visualizzare gli alias dei modelli attualmente configurati eseguendo:
+  ```bash
+  python main_server.py --help
+  ``` 
 ## 🛠️ Requisiti e Configurazione
 
 ### 1. Prerequisiti
 * **Python 3.12+**
-* **Ollama** installato e attivo (necessario solo se desideri usare Qwen)
+* **Ollama** installato e attivo (necessario se desideri usare un LLM in locale)
 * **API Key di Google AI Studio** (necessario solo se desideri usare Gemini)
 * **Access Token di Hugging Face** (necessario **solo** se usi `main_server.py` con modelli "gated" come Gemma)
 
-Se intendi usare Qwen2.5 Coder, scarica prima il modello locale con:
+Se intendi usare un LLM tramite Ollama, devi prima scaricare il modello in locale usando:
+```bash
+ollama run NomeModello
+```
+Ad esempio:
 ```bash
 ollama run qwen2.5-coder:7b
 ```

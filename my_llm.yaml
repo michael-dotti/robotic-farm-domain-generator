@@ -70,17 +70,76 @@ ollama:
     model_params:
       temperature: 0.0
 
+  cogito:8b:
+    model_family: cogito
+    model_alias: cogito:8b
+    model_context_length: 8192
+    model_params:
+      temperature: 0.0
+
+  codellama:latest:
+    model_family: llama
+    model_alias: codellama:latest
+    model_context_length: 8192
+    model_params:
+      temperature: 0.0
+
+  codegemma:latest:
+    model_family: gemma
+    model_alias: codegemma:latest
+    model_context_length: 8192
+    model_params:
+      temperature: 0.0
+
+  mistral-openorca:7b:
+    model_family: mistral
+    model_alias: mistral-openorca:7b
+    model_context_length: 8192
+    model_params:
+      temperature: 0.0
+
+  ornith-1.5:9b:
+    model_family: ornith
+    model_alias: ornith-1.5:9b
+    model_context_length: 8192
+    model_params:
+      temperature: 0.0
+  
 huggingface:
-  Qwen/Qwen2.5-Coder-3B-Instruct:
-    model_family: qwen
-    model_alias: Qwen/Qwen2.5-Coder-3B-Instruct
+  # --- FASCIA 30B - 35B ---
+  OpenBuddy/openbuddy-deepseekcoder-33b-v16.1-32k:
+    model_family: deepseek
+    model_alias: openbuddy-deepseekcoder-33b-v16.1-32k
     model_context_length: 32768
     model_params:
       temperature: 0.0
 
-  google/gemma-2-2b-it:
-    model_family: gemma
-    model_alias: google/gemma-2-2b-it
+  Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8:
+    model_family: qwen
+    model_alias: Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8
+    model_context_length: 32768
+    model_params:
+      temperature: 0.0
+
+  sigmanih/ornith-ai-Ornith-1.5-35B-A3B-GGUF:
+    model_family: qwen  # Ornith 1.5 35B è basato su architettura Qwen
+    model_alias: ornith-ai-Ornith-1.5-35B-A3B-GGUF
+    model_context_length: 32768
+    model_params:
+      temperature: 0.0
+
+  # --- FASCIA 67B - 70B ---
+  second-state/Llama-3.3-70B-Instruct-GGUF:
+    model_family: llama
+    model_alias: Llama-3.3-70B-Instruct-GGUF
+    model_context_length: 16384
+    model_params:
+      temperature: 0.0
+
+  tensorblock/openbuddy-deepseek-67b-v15.2-GGUF:
+    model_family: deepseek
+    model_alias: openbuddy-deepseek-67b-v15.2-GGUF
     model_context_length: 8192
     model_params:
       temperature: 0.0
+  

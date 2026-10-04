@@ -28,41 +28,42 @@ def termina_programma(message):
 #-----------------------------------------------------
 # 0. CONFIGURAZIONE PER IL SERVER REMOTO
 #-----------------------------------------------------
+MODEL_MAP = {
+    "qwen3-coder": "Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8",
+    "deepseekcoder": "OpenBuddy/openbuddy-deepseekcoder-33b-v16.1-32k",
+    "ornith": "sigmanih/ornith-ai-Ornith-1.5-35B-A3B-GGUF",
+    "llama-3.3": "second-state/Llama-3.3-70B-Instruct-GGUF",
+    "deepseek": "tensorblock/openbuddy-deepseek-67b-v15.2-GGUF",
+}
+
 parser = argparse.ArgumentParser(description="Esecuzione L2P batch su cluster Slurm")
 parser.add_argument(
     "--model", 
     type=str, 
-    default="qwen", 
-    choices=["qwen", "gemma"], 
-    help="Modello Hugging Face da utilizzare (qwen o gemma)"
+    default="qwen3-coder", 
+    choices=list(MODEL_MAP.keys()),  # Genera automaticamente le opzioni valide dalle chiavi
+    help="Inserisci il modello Hugging Face da utilizzare tra quelli disponibili"
 )
 args = parser.parse_args()
 
-# Assicuriamoci che la cartella dei template esista sul server
+# si assicura che la cartella dei template esista sul server
 os.makedirs("custom_template", exist_ok=True)
 
-# Recupera il token HF dal file .env (necessario per Gemma)
+# Recupera il token HF dal file .env
 hf_token = os.getenv("HF_TOKEN")
 
-# Inizializzazione di HUGGING_FACE
-if args.model == "qwen":
-    MODEL_ID = "Qwen/Qwen2.5-Coder-3B-Instruct"
-    print(f"Inizializzazione Hugging Face, modello: {MODEL_ID}\n")
-    llm = HUGGING_FACE(
-        model=MODEL_ID,
-        model_path=MODEL_ID, # Generalmente coincide con il nome del modello per il download
-        config_path="my_llm.yaml",
-        api_key=hf_token
-    )
-elif args.model == "gemma":
-    MODEL_ID = "google/gemma-2-2b-it"
-    print(f"Inizializzazione Hugging Face, modello: {MODEL_ID}\n")
-    llm = HUGGING_FACE(
-        model=MODEL_ID,
-        model_path=MODEL_ID,
-        config_path="my_llm.yaml",
-        api_key=hf_token
-    )
+# Estrazione dinamica del MODEL_ID
+MODEL_ID = MODEL_MAP[args.model]
+
+print(f"Inizializzazione Hugging Face, modello: {MODEL_ID}\n")
+
+# Istanziazione dell'LLM
+llm = HUGGING_FACE(
+    model=MODEL_ID,
+    model_path=MODEL_ID,
+    config_path="my_llm.yaml",
+    api_key=hf_token
+)
 
 # =======================================================
 # 1. COSTRUZIONE PROMPT
