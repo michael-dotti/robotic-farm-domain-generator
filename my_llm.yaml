@@ -13,49 +13,9 @@ gemini:
     model_params:
       temperature: 0.0
 
-  gemini-3.8-flash:
-    model_family: gemini
-    model_alias: gemini-3.8-flash
-    model_context_length: 1000000
-    model_params:
-      temperature: 0.0
-
-  gemini-3.7-flash:
-    model_family: gemini
-    model_alias: gemini-3.7-flash
-    model_context_length: 1000000
-    model_params:
-      temperature: 0.0
-
-  gemini-3.6-flash:
-    model_family: gemini
-    model_alias: gemini-3.6-flash
-    model_context_length: 1000000
-    model_params:
-      temperature: 0.0
-
-  gemini-3.5-flash:
-    model_family: gemini
-    model_alias: gemini-3.5-flash
-    model_context_length: 1000000
-    model_params:
-      temperature: 0.0
-
-  gemini-3.5-flash-lite:
-    model_family: gemini
-    model_alias: gemini-3.5-flash-lite
-    model_context_length: 1000000
-    model_params:
-      temperature: 0.0
-
-  gemini-3.1-flash-lite:
-    model_family: gemini
-    model_alias: gemini-3.1-flash-lite
-    model_context_length: 1000000
-    model_params:
-      temperature: 0.0
 
 ollama:
+  # per esecuzione sul proprio pc in locale
   qwen2.5-coder:14b:
     model_family: qwen
     model_alias: qwen2.5-coder:14b
@@ -105,41 +65,31 @@ ollama:
     model_params:
       temperature: 0.0
   
-huggingface:
-  # --- FASCIA 30B - 35B ---
-  OpenBuddy/openbuddy-deepseekcoder-33b-v16.1-32k:
-    model_family: deepseek
-    model_alias: openbuddy-deepseekcoder-33b-v16.1-32k
-    model_context_length: 32768
-    model_params:
-      temperature: 0.0
-
-  Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8:
+  # Per esecuzione sul server/cluster remoto
+  qwen3.8:27b:
     model_family: qwen
-    model_alias: Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8
+    model_alias: qwen3.8:27b
     model_context_length: 32768
     model_params:
       temperature: 0.0
 
-  sigmanih/ornith-ai-Ornith-1.5-35B-A3B-GGUF:
-    model_family: qwen  # Ornith 1.5 35B è basato su architettura Qwen
-    model_alias: ornith-ai-Ornith-1.5-35B-A3B-GGUF
+  qwen3-coder:30b:
+    model_family: qwen
+    model_alias: qwen3-coder:30b
     model_context_length: 32768
     model_params:
       temperature: 0.0
 
-  # --- FASCIA 67B - 70B ---
-  second-state/Llama-3.3-70B-Instruct-GGUF:
+  ornith-1.5:35b:
+    model_family: qwen
+    model_alias: ornith-1.5:35b
+    model_context_length: 32768
+    model_params:
+      temperature: 0.0
+
+  llama3.3:70b:
     model_family: llama
-    model_alias: Llama-3.3-70B-Instruct-GGUF
-    model_context_length: 16384
+    model_alias: llama3.3:70b
+    model_context_length: 128000
     model_params:
       temperature: 0.0
-
-  tensorblock/openbuddy-deepseek-67b-v15.2-GGUF:
-    model_family: deepseek
-    model_alias: openbuddy-deepseek-67b-v15.2-GGUF
-    model_context_length: 8192
-    model_params:
-      temperature: 0.0
-  

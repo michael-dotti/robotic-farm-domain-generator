@@ -1,5 +1,5 @@
 # Moduli fondamentali per la gestione di LLM e PDDL
-from l2p import DomainBuilder, DomainValidator, HUGGING_FACE
+from l2p import DomainBuilder, DomainValidator, UnifiedLLM
 from l2p.feedback_builder import FeedbackBuilder
 from l2p.prompt_builder import PromptBuilder
 
@@ -29,40 +29,34 @@ def termina_programma(message):
 # 0. CONFIGURAZIONE PER IL SERVER REMOTO
 #-----------------------------------------------------
 MODEL_MAP = {
-    "qwen3-coder": "Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8",
-    "deepseekcoder": "OpenBuddy/openbuddy-deepseekcoder-33b-v16.1-32k",
-    "ornith": "sigmanih/ornith-ai-Ornith-1.5-35B-A3B-GGUF",
-    "llama-3.3": "second-state/Llama-3.3-70B-Instruct-GGUF",
-    "deepseek": "tensorblock/openbuddy-deepseek-67b-v15.2-GGUF",
+    "qwen-27b": "qwen3.8:27b",
+    "qwen-coder-30b": "qwen3-coder:30b",
+    "ornith-35b": "ornith-1.5:35b",
+    "llama-70b": "llama3.3:70b",
 }
 
 parser = argparse.ArgumentParser(description="Esecuzione L2P batch su cluster Slurm")
 parser.add_argument(
     "--model", 
     type=str, 
-    default="qwen3-coder", 
+    default="qwen-coder-30b",
     choices=list(MODEL_MAP.keys()),  # Genera automaticamente le opzioni valide dalle chiavi
-    help="Inserisci il modello Hugging Face da utilizzare tra quelli disponibili"
+   help="Inserisci l'alias del modello Ollama da utilizzare"
 )
 args = parser.parse_args()
-
+selected_key = args.model
+ollama_model_tag = MODEL_MAP[selected_key]
 # si assicura che la cartella dei template esista sul server
 os.makedirs("custom_template", exist_ok=True)
 
-# Recupera il token HF dal file .env
-hf_token = os.getenv("HF_TOKEN")
 
-# Estrazione dinamica del MODEL_ID
-MODEL_ID = MODEL_MAP[args.model]
-
-print(f"Inizializzazione Hugging Face, modello: {MODEL_ID}\n")
+print(f"Inizializzazione Ollama, modello: {ollama_model_tag}\n")
 
 # Istanziazione dell'LLM
-llm = HUGGING_FACE(
-    model=MODEL_ID,
-    model_path=MODEL_ID,
-    config_path="my_llm.yaml",
-    api_key=hf_token
+llm =  UnifiedLLM(
+    provider="ollama",
+    model=ollama_model_tag,
+    config_path="my_llm.yaml"
 )
 
 # =======================================================

@@ -21,12 +21,18 @@ Per ora è disponibile un solo LLM di Google:
 * **`gemini-3.1-pro-preview`** (Provider: Google Gemini API) - Modello cloud ad alte prestazioni.
 
 ### 2. Esecuzione Batch per Server/Cluster (`main_server.py`)
-Script progettato specificamente per l'esecuzione su cluster HPC con risorse maggiori, mirato a testare modelli da 30B a 70B di parametri.Non richiede Ollama: scarica e avvia i modelli direttamente tramite l'integrazione nativa Hugging Face.
-* **Selezione Modello:** I modelli vengono gestiti dinamicamente tramite argomento a riga di comando. 
-* Puoi visualizzare gli alias dei modelli attualmente configurati eseguendo:
-  ```bash
-  python main_server.py --help
-  ``` 
+Script progettato per l'esecuzione batch tramite **Slurm** su cluster HPC. Gestisce modelli di grandi dimensioni (da 27B a 70B di parametri) sfruttando **Ollama**.
+Modelli configurati per il cluster:
+* **`qwen-27b`** (`qwen3.8:27b`) - Modello agentico bilanciato per iterazioni rapide.
+* **`qwen-coder-30b`** (`qwen3-coder:30b`) - Modello MoE ultra-veloce specializzato nel codice.
+* **`ornith-35b`** (`ornith-1.5:35b`) - Modello di fascia media basato su Qwen.
+* **`llama-70b`** (`llama3.3:70b`) - Modello ad altissima capacità di ragionamento logico.
+
+Puoi visualizzare le opzioni disponibili eseguendo:
+```bash
+python main_server.py --help
+```
+
 ## 🛠️ Requisiti e Configurazione
 
 ### 1. Prerequisiti
