@@ -19,14 +19,20 @@ load_dotenv()
 
 # Costanti dell'applicazione
 DOMAIN_NAME = "CAMPI"
+MAX_ATTEMPTS = 5
+# Modelli in locale
 QWEN_NAME = "qwen2.5-coder:7b"
 CODE_LAMA = "codellama:latest"
 CODE_GEMMA = "codegemma:latest"
 MISTRAL_ORCA = "mistral-openorca:7b"
 ORNITH = "ornith-1.5:9b"
 COGITO = "cogito:8b"
-GEMINI_NAME = "gemini-3.1-pro-preview"
-MAX_ATTEMPTS = 5
+# Modelli in cloud
+GEMINI_3_FLASH  = "gemini-3-flash-preview"
+GEMINI_25_LITE = "gemini-2.5-flash-lite"
+GEMINI_31_LITE  = "gemini-3.1-flash-lite"
+GEMINI_35_LITE  = "gemini-3.5-flash-lite"
+
 
 def termina_programma(message):
     sys.exit(message)
@@ -39,13 +45,16 @@ PROVIDERS = {
     MISTRAL_ORCA: "ollama",
     ORNITH: "ollama",
     COGITO: "ollama",
-    GEMINI_NAME: "gemini"
+    GEMINI_3_FLASH: "gemini",
+    GEMINI_25_LITE: "gemini",
+    GEMINI_31_LITE: "gemini",
+    GEMINI_35_LITE: "gemini",
 }
 
 # Menu interattivo sul terminale per la selezione del modello LLM
 response = questionary.select(
     "Quale intelligenza artificiale vuoi utilizzare?",
-    choices=[QWEN_NAME, GEMINI_NAME, CODE_LAMA, CODE_GEMMA, MISTRAL_ORCA, ORNITH, COGITO],
+    choices=[QWEN_NAME, CODE_LAMA, CODE_GEMMA, MISTRAL_ORCA, ORNITH, COGITO, GEMINI_3_FLASH, GEMINI_25_LITE, GEMINI_31_LITE, GEMINI_35_LITE ],
     instruction="", # Rimuove l'indicazione "(Use arrow keys)"
 ).ask()
 
@@ -68,6 +77,7 @@ p_types = (
     .set_format("Wrap a VALID JSON ARRAY inside the <types> ... </types> XML tags.")
     .add_rule("CRITICAL: Do NOT create inner XML tags like <type>...</type>.")
     .add_rule("CRITICAL: The content inside <types> MUST be ONLY a raw JSON array [ ... ].")
+    .add_rule("CRITICAL PDDL RULE: Do NOT include 'object' as a type. 'object' is a reserved PDDL keyword and is implicit. Start your hierarchy directly from user types (parent: 'object').")
     .add_rule("""EXACT OUTPUT FORMAT REQUIRED:
         <types>
         [
@@ -90,21 +100,22 @@ pb_predicates = (
     .set_format("Wrap a VALID JSON ARRAY inside the <predicates> ... </predicates> XML tags.")
     .add_rule("CRITICAL: Do NOT create inner XML tags like <predicate>...</predicate>.")
     .add_rule("CRITICAL: The content inside <predicates> MUST be ONLY a raw JSON array [ ... ]. Do not use markdown syntax block like ```json.")
+    .add_rule("CRITICAL COMPATIBILITY RULE: Carefully read the Problem file snippet included in the description. Ensure your predicates match the entities and initial states provided (e.g., how tools or tractor types are defined).") # 
     .add_rule("""EXACT OUTPUT FORMAT REQUIRED:
 <predicates>
 [
   {
     "name": "at",
-    "parameters": [
-      {"name": "?x", "type": "contadino"},
-      {"name": "?y", "type": "CAMPO"}
+    "params": [
+      {"variable": "?x", "type": "contadino"}, 
+      {"variable": "?y", "type": "campo"}
     ],
     "desc": "The farmer ?x is at field ?y"
   },
   {
     "name": "innaffiato",
-    "parameters": [
-      {"name": "?c", "type": "CAMPO"}
+    "params": [
+      {"variable": "?c", "type": "campo"}
     ],
     "desc": "Field ?c is watered"
   }
@@ -119,15 +130,45 @@ pb_predicates.save_prompt(filename="custom_template/custom_predicates_prompt.md"
 custom_predicates_template = load_custom_template(filepath="custom_template/custom_predicates_prompt.md")
 
 # carico invece il template di default per generare le azioni
-actions_template = load_default_template("domain","prompt_actions.md")
+pb_actions = (
+    PromptBuilder()
+    .set_role("You are an expert PDDL Generator Agent. Your role is to model PDDL domain actions (:actions).")
+    .set_format("Wrap a VALID JSON ARRAY inside the <actions> ... </actions> XML tags.")
+    .add_rule("CRITICAL: The content inside <actions> MUST be ONLY a raw JSON array [ ... ] containing action objects, NOT raw PDDL code.")
+    .add_rule("CRITICAL NAMING RULE: Action names must be clean, grammatically correct Italian verbs/phrases. Do NOT create distorted words or duplicate syllables like 'arara-campo' or 'depona-'.")
+    .add_rule("""EXACT JSON STRUCTURE REQUIRED PER ACTION:
+    {
+        "name": "action-name",
+        "params": [
+            {"variable": "?c", "type": "contadino"},
+            {"variable": "?t", "type": "trattore"}
+        ],
+        "preconditions": {
+            "conditions": ["(at ?c ?loc)", "(at ?t ?loc)"]
+        },
+        "effects": {
+            "add": ["(a-bordo ?c ?t)"],
+            "delete": ["(at ?c ?loc)"]
+        },
+        "desc": "Description of the action"
+    }""")
+    .add_rule("CRITICAL RULE FOR DRIVING (guida-trattore): When a farmer is `a-bordo` of a tractor and drives it, ONLY the tractor changes its position. Do NOT add an independent `at` effect for the farmer at the destination, because they move implicitly while `a-bordo`.")
+    .add_rule("CRITICAL COMPATIBILITY: Ensure action parameters and types strictly match the objects and initial state definitions from the Problem file snippet.")
+    .set_task("Extract the necessary actions for the domain in JSON format.")
+)
+
+pb_actions.save_prompt(filename="custom_template/custom_actions_prompt.md")
+custom_actions_template = load_custom_template(filepath="custom_template/custom_actions_prompt.md")
 
 # Costruzione del prompt per la REVISIONE (FeedbackBuilder)
 pb_revise = (
     PromptBuilder()
     .set_role("You are an expert PDDL Revision Agent. Your job is to fix failed PDDL component generations based on diagnostic feedback.")
-    .set_format("You MUST output the corrected components wrapped in their exact XML tags: <types> for types, <predicates> for predicates, and <actions> for actions.")
-    .add_rule("CRITICAL: You MUST wrap the JSON output in the correct XML tags (e.g., <types> ... </types>). Do NOT use generic markdown like ```json.")
-    .add_rule("CRITICAL PDDL RULE: Types and Predicates CANNOT share the same names. If the error says a name is already in use, rename or remove the duplicate predicate.")
+    .set_format("You MUST output the components wrapped in their exact XML tags.")
+    .add_rule("CRITICAL FORMAT FOR <types>: Must be a VALID JSON ARRAY of objects (e.g., [{'name': '...', 'parent': '...'}]. NEVER write native PDDL text here. Do NOT include 'object' as a type).")
+    .add_rule("CRITICAL FORMAT FOR <predicates>: Must be a VALID JSON ARRAY of objects with keys 'name', 'params' (containing a list of objects with 'variable' and 'type'), and 'desc'. NEVER write native PDDL text like '(?c - contadino)' inside predicates.")
+    .add_rule("CRITICAL FORMAT FOR <actions>: Can use standard PDDL action blocks.")
+    .add_rule("CRITICAL PDDL RULE: Types and Predicates CANNOT share the same names.")
     .add_rule("Output ONLY the requested XML blocks. No conversational text.")
     .set_task("Revise the following PDDL component(s) based on the diagnostic feedback.\n{context}")
 )
@@ -286,7 +327,7 @@ try:
         description=domain_desc,
         types=extracted_types,
         predicates=extracted_predicates,
-        prompt_template=actions_template
+        prompt_template=custom_actions_template
     )
 except (ValueError, RuntimeError) as e:
     termina_programma(f"Errore durante l'estrazione delle azioni: {e}")
@@ -402,6 +443,12 @@ if domain_result.valid:
     print(f"\n[OK] Domain PDDL valido e pronto! Generato in {current_attempt} iterazione/i.")
     print("--- ANTEPRIMA DEL FILE DOMAIN.PDDL ---\n")
     print(domain_pddl_content)
+
+    # --- SALVATAGGIO DEL FILE SU DISCO ---
+    filename_output = "domain.pddl"
+    with open(filename_output, "w", encoding="utf-8") as f:
+        f.write(domain_pddl_content)
+    print(f"\n[SALVATAGGIO] File scritto correttamente come: '{filename_output}' nella cartella di lavoro.")
 else:
     termina_programma(f"\n[FATAL] L'LLM ha fallito la generazione dopo {MAX_ATTEMPTS} tentativi. Ultimi errori: {domain_result.errors}")
 

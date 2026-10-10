@@ -220,3 +220,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#file
+domain.pddl
+problem.pddl

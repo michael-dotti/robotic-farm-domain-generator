@@ -15,10 +15,9 @@ Il progetto offre due script di avvio distinti, pensati per ambienti di esecuzio
 Script pensato per l'uso su PC. Presenta un menu interattivo nel terminale per la scelta del modello. Possiamo suddividere i modelli a disposizione in due tipologie:
 1) LLM caricati in locale: utilizziamo Ollama per per eseguire localmente modelli (esempi: *CodeLlama*, *CodeGemma*, *Mistral*, *Cogito*, *Ornith*, ecc.).
 2) LLM in cloud: usufruiamo dei servizi IA offerti da Google Gemini API, che tramite un account ti permette di generare una chiave
-per eseguire un loro LLM. In questo modo al tuo pc non verranno richieste risorse per eseguire LLM. Attenzione: un account gratuito
-ti concede un utilizzo limitato degli LLM (es: 20 richieste massime al giorno).
-Per ora è disponibile un solo LLM di Google:
-* **`gemini-3.1-pro-preview`** (Provider: Google Gemini API) - Modello cloud ad alte prestazioni.
+per eseguire un loro LLM. In questo modo al tuo pc non verranno richieste risorse per eseguire LLM. Attenzione: un account gratuito ti concede un utilizzo limitato degli LLM (es: 20 richieste massime al giorno).
+Il codice mette a disposizione svariati LLM di google (esempi: *gemini-3-flash-preview*,*gemini-3.5-flash*,**,ecc.).
+
 
 ### 2. Esecuzione Batch per Server/Cluster (`main_server.py`)
 Script progettato per l'esecuzione batch tramite **Slurm** su cluster HPC. Gestisce modelli di grandi dimensioni (da 27B a 70B di parametri) sfruttando **Ollama**.
@@ -76,10 +75,9 @@ Copia il file di esempio .env.example per creare il tuo file di configurazione d
 cp .env.example .env
 ```
 
-Apri il file .env e inserisci la tua chiave API o il token se usi Gemini o Hugging Face:
+Apri il file .env e inserisci la tua chiave API se usi Gemini:
 ```env
 LLM_GEMINI_KEY="la_tua_chiave_api_qui"
-HF_TOKEN="il_tuo_token_huggingface_qui"
 ```
 
 ## 💻 Guida all'Uso

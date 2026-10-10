@@ -1,18 +1,38 @@
 gemini:
-  gemini-3.1-pro-preview:
+  gemini-3-flash-preview:
     model_family: gemini
-    model_alias: gemini-3.1-pro-preview
-    model_context_length: 2000000
-    model_params:
-      temperature: 0.0
-
-  gemini-2.5-flash:
-    model_family: gemini
-    model_alias: gemini-2.5-flash
+    model_alias: gemini-3-flash-preview
     model_context_length: 1000000
     model_params:
       temperature: 0.0
 
+  gemini-3.1-flash-lite:
+    model_family: gemini
+    model_alias: gemini-3.1-flash-lite
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+
+  gemini-3.5-flash-lite:
+    model_family: gemini
+    model_alias: gemini-3.5-flash-lite
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+  
+  gemini-2.5-flash-lite:
+    model_family: gemini
+    model_alias: gemini-2.5-flash-lite
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
+  
+  gemini-3.5-flash:
+    model_family: gemini
+    model_alias: gemini-3.5-flash
+    model_context_length: 1000000
+    model_params:
+      temperature: 0.0
 
 ollama:
   # per esecuzione sul proprio pc in locale
