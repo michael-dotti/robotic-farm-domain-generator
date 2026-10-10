@@ -32,7 +32,7 @@ GEMINI_3_FLASH  = "gemini-3-flash-preview"
 GEMINI_25_LITE = "gemini-2.5-flash-lite"
 GEMINI_31_LITE  = "gemini-3.1-flash-lite"
 GEMINI_35_LITE  = "gemini-3.5-flash-lite"
-
+GEMINI_38_FLASH = "gemini-3.8-flash"
 
 def termina_programma(message):
     sys.exit(message)
@@ -49,12 +49,13 @@ PROVIDERS = {
     GEMINI_25_LITE: "gemini",
     GEMINI_31_LITE: "gemini",
     GEMINI_35_LITE: "gemini",
+    GEMINI_38_FLASH: "gemini",
 }
 
 # Menu interattivo sul terminale per la selezione del modello LLM
 response = questionary.select(
     "Quale intelligenza artificiale vuoi utilizzare?",
-    choices=[QWEN_NAME, CODE_LAMA, CODE_GEMMA, MISTRAL_ORCA, ORNITH, COGITO, GEMINI_3_FLASH, GEMINI_25_LITE, GEMINI_31_LITE, GEMINI_35_LITE ],
+    choices=[QWEN_NAME, CODE_LAMA, CODE_GEMMA, MISTRAL_ORCA, ORNITH, COGITO, GEMINI_3_FLASH, GEMINI_25_LITE, GEMINI_31_LITE, GEMINI_35_LITE, GEMINI_38_FLASH ],
     instruction="", # Rimuove l'indicazione "(Use arrow keys)"
 ).ask()
 
@@ -75,6 +76,7 @@ p_types = (
     PromptBuilder()
     .set_role("You are an expert PDDL Generator Agent. Your role is to model PDDL domain types (:types).")
     .set_format("Wrap a VALID JSON ARRAY inside the <types> ... </types> XML tags.")
+    .add_rule("CRITICAL LANGUAGE RULE: All type names MUST be written strictly in ITALIAN to match the problem file objects.")
     .add_rule("CRITICAL: Do NOT create inner XML tags like <type>...</type>.")
     .add_rule("CRITICAL: The content inside <types> MUST be ONLY a raw JSON array [ ... ].")
     .add_rule("CRITICAL PDDL RULE: Do NOT include 'object' as a type. 'object' is a reserved PDDL keyword and is implicit. Start your hierarchy directly from user types (parent: 'object').")
@@ -100,6 +102,7 @@ pb_predicates = (
     .set_format("Wrap a VALID JSON ARRAY inside the <predicates> ... </predicates> XML tags.")
     .add_rule("CRITICAL: Do NOT create inner XML tags like <predicate>...</predicate>.")
     .add_rule("CRITICAL: The content inside <predicates> MUST be ONLY a raw JSON array [ ... ]. Do not use markdown syntax block like ```json.")
+    .add_rule("CRITICAL LANGUAGE RULE: All predicate names, descriptions, and type references MUST be strictly in ITALIAN.")
     .add_rule("CRITICAL COMPATIBILITY RULE: Carefully read the Problem file snippet included in the description. Ensure your predicates match the entities and initial states provided (e.g., how tools or tractor types are defined).") # 
     .add_rule("""EXACT OUTPUT FORMAT REQUIRED:
 <predicates>
@@ -135,6 +138,7 @@ pb_actions = (
     .set_role("You are an expert PDDL Generator Agent. Your role is to model PDDL domain actions (:actions).")
     .set_format("Wrap a VALID JSON ARRAY inside the <actions> ... </actions> XML tags.")
     .add_rule("CRITICAL: The content inside <actions> MUST be ONLY a raw JSON array [ ... ] containing action objects, NOT raw PDDL code.")
+    .add_rule("CRITICAL LANGUAGE RULE: All action names, parameters, descriptions, and type constraints MUST be strictly in ITALIAN.")
     .add_rule("CRITICAL NAMING RULE: Action names must be clean, grammatically correct Italian verbs/phrases. Do NOT create distorted words or duplicate syllables like 'arara-campo' or 'depona-'.")
     .add_rule("""EXACT JSON STRUCTURE REQUIRED PER ACTION:
     {
